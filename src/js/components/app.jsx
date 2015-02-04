@@ -5,8 +5,6 @@ var React = require('react'),
 
 var App = React.createClass({
 
-  mixins: [ Router.Navigation ],
-
   getInitialState: function () {
     return {
       loggedIn: auth.loggedIn()
