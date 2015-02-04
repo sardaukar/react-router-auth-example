@@ -1,11 +1,12 @@
 var React = require('react'),
     Router = require('react-router'),
     { Route, RouteHandler, Link } = Router,
-    auth = require('../services/auth');
+    auth = require('../services/auth'),
+    RedirectWhenLoggedIn = require('../mixins/redirect_when_logged_in');
 
 var Login = React.createClass({
 
-  mixins: [ Router.Navigation ],
+  mixins: [ Router.Navigation, RedirectWhenLoggedIn ],
 
   statics: {
     attemptedTransition: null
@@ -15,12 +16,6 @@ var Login = React.createClass({
     return {
       error: false
     };
-  },
-
-  componentWillMount: function () {
-    if ( auth.loggedIn() ) {
-      this.replaceWith('/dashboard');
-    }
   },
 
   handleSubmit: function (event) {
