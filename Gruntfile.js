@@ -3,19 +3,56 @@ module.exports = function(grunt) {
 
   var to5ify = require("6to5ify");
 
+  var rewrite = require('connect-modrewrite');
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    connect: {
+      preview: {
+        options: {
+          port: 9000,
+          keepalive: true,
+          base: './dist',
+          hostname: 'localhost',
+
+          // http://danburzo.ro/grunt/chapters/server/
+          middleware: function(connect, options) {
+
+            var middleware = [];
+
+            // 1. mod-rewrite behavior
+            var rules = [
+            '!\\.html|\\.js|\\.css|\\.svg|\\.jp(e?)g|\\.png|\\.gif$ /index.html'
+            ];
+            middleware.push(rewrite(rules));
+
+            // 2. original middleware behavior
+            var base = options.base;
+            if (!Array.isArray(base)) {
+              base = [base];
+            }
+            base.forEach(function(path) {
+              middleware.push(connect.static(path));
+            });
+
+            return middleware;
+
+          }
+
+        }
+      }
+    },
     watch: {
       js: {
         options: {
-          livereload: true
+          livereload: false
         },
         files: ['src/js/**/*.es6','src/js/**/*.js','src/js/**/*.jsx'],
         tasks: ['browserify']
       },
       sass: {
         options: {
-          livereload: true
+          livereload: false
         },
         files: ['src/scss/**/*.scss'],
         tasks: ['sass']
@@ -47,7 +84,21 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.loadNpmTasks('grunt-contrib-sass');
+grunt.registerTask('preview', [], function () {
 
-  grunt.registerTask("default", ["browserify", "watch"]);
+  // load plugins for the task
+  grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+
+  // execute the task
+  grunt.task.run(
+    'connect:preview'
+    );
+
+});
+
+grunt.loadNpmTasks('grunt-contrib-sass');
+grunt.loadNpmTasks('grunt-http-server');
+
+grunt.registerTask("default", ["browserify", "watch"]);
 };
