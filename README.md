@@ -1,4 +1,6 @@
-Auth-Flow-Example
+react-router auth
 =================
 
-npm install, grunt (one terminal), grunt preview (another), serving on localhost:9000
+Example on how to do authentication with react-router.
+
+npm install, then grunt to start
