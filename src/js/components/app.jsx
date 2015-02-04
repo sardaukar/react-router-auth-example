@@ -1,12 +1,11 @@
 var React = require('react'),
     Router = require('react-router'),
     { Route, RouteHandler, Link } = Router,
-    auth = require('../services/auth'),
-    RedirectWhenLoggedIn = require('../mixins/redirect_when_logged_in');
+    auth = require('../services/auth');
 
 var App = React.createClass({
 
-  mixins: [ Router.Navigation, RedirectWhenLoggedIn ],
+  mixins: [ Router.Navigation ],
 
   getInitialState: function () {
     return {
