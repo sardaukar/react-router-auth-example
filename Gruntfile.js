@@ -7,6 +7,14 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    concurrent: {
+      all: {
+        tasks: ['browserify','watch','preview'],
+        options: {
+          logConcurrentOutput: true
+        }
+      }
+    },
     connect: {
       preview: {
         options: {
@@ -98,7 +106,7 @@ grunt.registerTask('preview', [], function () {
 });
 
 grunt.loadNpmTasks('grunt-contrib-sass');
-grunt.loadNpmTasks('grunt-http-server');
+grunt.loadNpmTasks('grunt-concurrent');
 
-grunt.registerTask("default", ["browserify", "watch"]);
+grunt.registerTask("default", ["concurrent:all"]);
 };
